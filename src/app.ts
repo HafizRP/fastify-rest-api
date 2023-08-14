@@ -1,5 +1,5 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import fjwt, { JWT } from "@fastify/jwt";
+import fjwt from "@fastify/jwt";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import userRoutes from "./modules/user/user.route";
@@ -8,26 +8,6 @@ import { productSchemas } from "./modules/product/product.schema";
 import productRoutes from "./modules/product/product.route";
 
 export const server = Fastify();
-
-declare module "fastify" {
-  interface FastifyRequest {
-    jwt: JWT;
-  }
-
-  export interface FastifyInstance {
-    authenticate: any;
-  }
-}
-
-declare module "@fastify/jwt" {
-  interface FastifyJWT {
-    user: {
-      id: number;
-      name: string;
-      email: string;
-    };
-  }
-}
 
 server.get("/healthcheck", (request, reply) => {
   return { status: "OK" };
