@@ -9,9 +9,10 @@ import { $ref } from "./user.schema";
 
 async function userRoutes(server: FastifyInstance) {
   server.post(
-    "/",
+    "/register",
     {
       schema: {
+        tags: ["User Endpoints"],
         body: $ref("createUserSchema"),
         response: { 201: $ref("createUserResponseSchema") },
       },
@@ -23,6 +24,7 @@ async function userRoutes(server: FastifyInstance) {
     "/login",
     {
       schema: {
+        tags: ["User Endpoints"],
         body: $ref("loginSchema"),
         response: {
           200: $ref("loginResponseSchema"),
