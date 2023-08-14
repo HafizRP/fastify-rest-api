@@ -3,9 +3,12 @@ import fjwt, { JWT } from "@fastify/jwt";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import userRoutes from "./modules/user/user.route";
+import fview from "@fastify/view";
+import hbs from "handlebars";
 import { userSchemas } from "./modules/user/user.schema";
 import { productSchemas } from "./modules/product/product.schema";
 import productRoutes from "./modules/product/product.route";
+import path from "path";
 
 export const server = Fastify();
 
@@ -44,6 +47,14 @@ server.decorate(
   }
 );
 
+server.register(fview, {
+  engine: {
+    handlebars: hbs,
+  },
+  root: path.resolve(__dirname, "./views"),
+  includeViewExtension: true,
+});
+
 server.register(fjwt, {
   secret: "sadlskndalskdaslkdasldn",
 });
@@ -74,6 +85,10 @@ async function main() {
 
   server.register(productRoutes, {
     prefix: "api/products",
+  });
+
+  server.get("/home", (request: FastifyRequest, reply: FastifyReply) => {
+    return reply.view("index", { data: "Hello" });
   });
 
   try {
