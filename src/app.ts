@@ -7,7 +7,7 @@ import { userSchemas } from "./modules/user/user.schema";
 import { productSchemas } from "./modules/product/product.schema";
 import productRoutes from "./modules/product/product.route";
 
-export const server = Fastify();
+const server = Fastify();
 
 server.get("/healthcheck", (request, reply) => {
   return { status: "OK" };
@@ -56,11 +56,8 @@ async function main() {
     prefix: "api/products",
   });
 
-  try {
-    await server.listen({ port: 3000 });
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
+
+  return server
 }
-main();
+
+export default main
