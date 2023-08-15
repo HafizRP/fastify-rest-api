@@ -8,6 +8,7 @@ async function productRoutes(server: FastifyInstance) {
     {
       preHandler: [server.authenticate],
       schema: {
+        tags: ["Products Routes"],
         body: $ref("createProductSchema"),
         response: {
           201: $ref("productResponseSchema"),
@@ -21,6 +22,7 @@ async function productRoutes(server: FastifyInstance) {
     "/",
     {
       schema: {
+        tags: ["Products Routes"],
         response: {
           200: $ref("productsResponseSchema"),
         },
