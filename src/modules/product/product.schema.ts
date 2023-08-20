@@ -13,7 +13,7 @@ const productGenerated = {
   updatedAt: z.string(),
 };
 
-const createProductSchema = z.object({ ...productInput });
+const createProductSchema = z.object({ ...productInput, ownerId: z.number() });
 const createProductResponseSchema = z.object({});
 const productResponseSchema = z.object({
   ...productInput,
