@@ -1,6 +1,7 @@
 import { FastifyZodInstance } from "fastify-zod/build/FastifyZod";
 import { FastifyInstance } from "fastify";
 import {
+  deleteUserHandler,
   getUsersHandler,
   loginHandler,
   registerUserHandler,
@@ -36,6 +37,9 @@ async function userRoutes(server: FastifyInstance) {
   );
 
   // server.get("/", { preHandler: [server.authenticate] }, getUsersHandler);
+
+
+  server.delete('/:email', { preHandler: [server.authenticate] }, deleteUserHandler)
 }
 
 export default userRoutes;

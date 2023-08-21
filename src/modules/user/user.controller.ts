@@ -1,9 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createUser, findUserByEmail, findUsers } from "./user.service";
 import { CreateUserInput, LoginInput } from "./user.schema";
-
 import { verifyPassword } from "../../utils/crypto";
-import { server } from "../../app";
+import prisma from "../../utils/prisma";
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -14,10 +13,14 @@ export async function registerUserHandler(
   const body = request.body;
 
   try {
+    const users = await findUserByEmail(body.email)
+
+    if (users) throw reply.code(401).send({ message: "CREDENTIAL_USED" })
+
     const user = await createUser(body);
+
     return reply.code(201).send(user);
   } catch (error) {
-    console.log(error);
     return reply.code(500).send(error);
   }
 }
@@ -46,7 +49,7 @@ export async function loginHandler(
 
   const { password, salt, ...rest } = user;
 
-  return { accessToken: server.jwt.sign(rest) };
+  return { accessToken: request.server.jwt.sign(rest) };
 }
 
 export async function getUsersHandler(
@@ -54,6 +57,24 @@ export async function getUsersHandler(
   reply: FastifyReply
 ) {
   const users = await findUsers();
-
   return users;
+}
+
+
+export async function deleteUserHandler(request: FastifyRequest<{
+  Params: { email: string }
+}>, reply: FastifyReply) {
+  try {
+    const { email } = request.params
+    const user = await prisma.user.findUnique({ where: { email } })
+
+    if (!user) throw reply.code(401).send({ message: "INVALID_CREDENTIALS" })
+
+    await prisma.user.delete({ where: { email } })
+
+    return reply.code(200).send({ message: "USER_DELETED" })
+
+  } catch (error) {
+    throw error
+  }
 }
