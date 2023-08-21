@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --respawn --transpile-only --exit-child src/server.ts",
+    "build": "tsc --build",
+    "start": "node dist/server.js",
+    "dev": "tsnd --respawn --transpile-only --exit-child dotenv -v NODE_ENV='development' src/server.ts",
     "pretest": "dotenv -e .env.test -- npx prisma migrate dev",
     "test": "dotenv -e env.test -v NODE_ENV=test -- jest --coverage"
   },
@@ -17,7 +19,6 @@
     "@fastify/swagger-ui": "^1.9.3",
     "@prisma/client": "^5.0.0",
     "@types/jest": "^29.5.3",
-    "dotenv": "^16.3.1",
     "fastify": "^4.20.0",
     "fastify-jwt": "^4.2.0",
     "fastify-plugin": "^4.5.1",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@types/fastify-jwt": "^0.8.1",
     "@types/node": "^20.4.5",
+    "dotenv": "^16.3.1",
     "dotenv-cli": "^7.2.1",
     "typescript": "^5.1.6"
   }
