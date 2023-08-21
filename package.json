@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
-    "start": "node dist/server.js",
-    "dev": "tsnd --respawn --transpile-only --exit-child dotenv -v NODE_ENV='development' src/server.ts",
+    "start": "dotenv -v NODE_ENV -- node dist/server.js",
+    "dev": "dotenv -v NODE_ENV=development -- tsnd --respawn --transpile-only --exit-child src/server.ts",
     "pretest": "dotenv -e .env.test -- npx prisma migrate dev",
     "test": "dotenv -e env.test -v NODE_ENV=test -- jest --coverage"
   },
