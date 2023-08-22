@@ -1,8 +1,6 @@
-import { FastifyZodInstance } from "fastify-zod/build/FastifyZod";
 import { FastifyInstance } from "fastify";
 import {
   deleteUserHandler,
-  getUsersHandler,
   loginHandler,
   registerUserHandler,
 } from "./user.controller";
@@ -26,7 +24,6 @@ async function userRoutes(server: FastifyInstance) {
     {
       schema: {
         tags: ["User Routes"],
-
         body: $ref("loginSchema"),
         response: {
           200: $ref("loginResponseSchema"),
@@ -36,10 +33,14 @@ async function userRoutes(server: FastifyInstance) {
     loginHandler
   );
 
-  // server.get("/", { preHandler: [server.authenticate] }, getUsersHandler);
-
-
-  server.delete('/:email', { preHandler: [server.authenticate] }, deleteUserHandler)
+  server.delete(
+    "/:email",
+    {
+      preHandler: [server.authenticate],
+      schema: { tags: ["User Routes"], params: $ref("deleteUserSchema") },
+    },
+    deleteUserHandler
+  );
 }
 
 export default userRoutes;
