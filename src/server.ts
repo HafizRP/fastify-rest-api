@@ -1,23 +1,12 @@
 import main from "./app";
-
-import dotenv from "dotenv";
-
-dotenv.config({
-  path:
-    process.env.NODE_ENV == "test"
-      ? ".env.test"
-      : process.env.NODE_ENV == "development"
-      ? ".env.local"
-      : ".env",
-});
-
-console.log(`Current environtmen : ${process.env.NODE_ENV}`);
+import { Env } from "./common/schema/app.schema";
 
 async function buildServer() {
   const app = await main();
   try {
-    await app.listen({ port: 3000 });
+    await app.listen({ port: Env.APP_PORT });
   } catch (error) {
+    console.log(error)
     process.exit(1);
   }
 }

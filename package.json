@@ -6,15 +6,17 @@
   "scripts": {
     "build": "tsc --build",
     "start": "dotenv -v NODE_ENV=production -- node dist/server.js",
+    "migrate:prod": "dotnenv -e .env -- npx prisma migrate dev",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
-    "dev": "dotenv -v NODE_ENV=development -- tsnd --respawn --transpile-only --exit-child src/server.ts",
+    "dev": "dotenv -e .env.local -- tsnd --respawn --transpile-only --exit-child src/server.ts",
     "pretest": "dotenv -e .env.test -- npx prisma migrate dev",
-    "test": "dotenv -e env.test -v NODE_ENV=test -- jest --coverage"
+    "test": "dotenv -e env.test -- jest --coverage"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/env": "^4.2.0",
     "@fastify/jwt": "^7.2.0",
     "@fastify/swagger": "^8.8.0",
     "@fastify/swagger-ui": "^1.9.3",
