@@ -6,6 +6,9 @@ import userRoutes from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
 import { productSchemas } from "./modules/product/product.schema";
 import productRoutes from "./modules/product/product.route";
+// import { Env } from "./common/schema/app.schema";
+
+console.log(process.env.DATABASE_URL)
 
 const server = Fastify();
 
@@ -55,7 +58,6 @@ async function main() {
   server.register(productRoutes, {
     prefix: "api/products",
   });
-
 
   return server
 }
