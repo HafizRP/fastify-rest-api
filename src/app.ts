@@ -57,7 +57,7 @@ async function main() {
     prefix: "api/products",
   });
 
-  return server
+  return server;
 }
 
-export default main
+export default main;
