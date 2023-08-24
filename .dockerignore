@@ -1,0 +1,7 @@
+dist
+node_modules
+readme.md
+# tests
+.env.local
+.env.test
+coverage
