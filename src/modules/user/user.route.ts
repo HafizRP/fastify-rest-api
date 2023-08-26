@@ -7,6 +7,15 @@ import {
 import { $ref } from "./user.schema";
 
 async function userRoutes(server: FastifyInstance) {
+  server.get('/login/google/callback', async (request, reply) => {
+    try {
+      const googlaOauth2 = await server.googleOauth2.getAccessTokenFromAuthorizationCodeFlow(request)
+      return googlaOauth2
+    } catch (error) {
+      throw error
+    }
+  })
+
   server.post(
     "/register",
     {
