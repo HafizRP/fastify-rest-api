@@ -7,12 +7,21 @@ import { userSchemas } from "./modules/user/user.schema";
 import { productSchemas } from "./modules/product/product.schema";
 import productRoutes from "./modules/product/product.route";
 import { Env } from "./common/schema/app.schema";
+import AMQ from "./utils/amqlib"
 
 const server = Fastify();
+
 
 server.get("/healthcheck", (request, reply) => {
   return { status: "OK" };
 });
+
+server.get('/publish', async (request, reply) => {
+  const connection = await AMQ
+  connection.sendToQueue("test-channel", Buffer.from("Hello This is from fastify-rest-api"))
+
+  reply.send({ message: "Message send" })
+})
 
 server.decorate(
   "authenticate",
