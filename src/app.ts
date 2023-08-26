@@ -1,29 +1,33 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fjwt from "@fastify/jwt";
-import foauth from "@fastify/oauth2"
+import foauth from "@fastify/oauth2";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
 import { productSchemas } from "./modules/product/product.schema";
 import { Env } from "./common/schema/app.schema";
-import fcookie from '@fastify/cookie';
+import fcookie from "@fastify/cookie";
 import productRoutes from "./modules/product/product.route";
-import AMQ from "./utils/amqlib"
+import AMQServer from "./utils/amqlib";
 
 const server = Fastify();
-
 
 server.get("/healthcheck", (request, reply) => {
   return { status: "OK" };
 });
 
-server.get('/publish', async (request, reply) => {
-  const connection = await AMQ
-  connection.sendToQueue("test-channel", Buffer.from("Hello This is from fastify-rest-api"))
+server.get("/publish", async (request, reply) => {
+  const connection = await AMQServer();
+  connection.sendToQueue(
+    "test-channel",
+    Buffer.from("Hello This is from fastify-rest-api")
+  );
 
-  reply.send({ message: "Message send" })
-})
+  await connection.close();
+
+  reply.send({ message: "Message send" });
+});
 
 server.decorate(
   "authenticate",
@@ -68,27 +72,26 @@ async function main() {
     prefix: "api/products",
   });
 
-  server.register(fcookie)
+  server.register(fcookie);
 
   server.register(foauth, {
     name: "googleOauth2",
     credentials: {
       client: {
         id: Env.GOOGLE_CLIENT_ID,
-        secret: Env.GOOGLE_SECRET
+        secret: Env.GOOGLE_SECRET,
       },
-      auth: foauth.GOOGLE_CONFIGURATION
+      auth: foauth.GOOGLE_CONFIGURATION,
     },
     scope: ["profile"],
     startRedirectPath: "/api/users/login/google",
-    callbackUri: "http://localhost:3000/api/users/login/google/callback"
-  })
+    callbackUri: "http://localhost:3000/api/users/login/google/callback",
+  });
 
-  server.get('/home', (request, reply) => {
-    reply.header('Content-Type', "text/html");
-    reply.send("<a href='/api/users/login/google'>Login With Google</a>")
-  })
-
+  server.get("/home", (request, reply) => {
+    reply.header("Content-Type", "text/html");
+    reply.send("<a href='/api/users/login/google'>Login With Google</a>");
+  });
 
   return server;
 }
