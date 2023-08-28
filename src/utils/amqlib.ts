@@ -8,4 +8,4 @@ async function createConnection() {
     return channel
 }
 
-export default createConnection()
+export default createConnection

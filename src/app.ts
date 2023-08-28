@@ -19,7 +19,7 @@ server.get("/healthcheck", (request, reply) => {
 });
 
 server.get('/publish', async (request, reply) => {
-  const connection = await AMQ
+  const connection = await AMQ()
   connection.sendToQueue("test-channel", Buffer.from("Hello This is from fastify-rest-api"))
 
   reply.send({ message: "Message send" })
