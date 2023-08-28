@@ -1,12 +1,14 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fjwt from "@fastify/jwt";
+import foauth from "@fastify/oauth2"
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import userRoutes from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
 import { productSchemas } from "./modules/product/product.schema";
-import productRoutes from "./modules/product/product.route";
 import { Env } from "./common/schema/app.schema";
+import fcookie from '@fastify/cookie';
+import productRoutes from "./modules/product/product.route";
 import AMQ from "./utils/amqlib"
 
 const server = Fastify();
@@ -65,6 +67,46 @@ async function main() {
   server.register(productRoutes, {
     prefix: "api/products",
   });
+
+  server.register(fcookie)
+
+  server.register(foauth, {
+    name: "googleOauth2",
+    credentials: {
+      client: {
+        id: Env.GOOGLE_CLIENT_ID,
+        secret: Env.GOOGLE_SECRET
+      },
+      auth: foauth.GOOGLE_CONFIGURATION
+    },
+    scope: ["profile"],
+    startRedirectPath: "/api/users/login/google",
+    callbackUri: "http://localhost:3000/api/users/login/google/callback"
+  })
+
+  server.register(foauth, {
+    name: "githubOauth2",
+    credentials: {
+      client: {
+        id: Env.GITHUB_CLIENT_ID,
+        secret: Env.GITHUB_SECRET
+      },
+      auth: foauth.GITHUB_CONFIGURATION
+    },
+    startRedirectPath: "/api/users/login/github",
+    callbackUri: "http://localhost:3000/api/users/login/github/callback"
+  })
+
+  server.get('/login', (request, reply) => {
+    reply.header('Content-Type', "text/html");
+    reply.send("<a href='/api/users/login/google'>Login With Google</a> <br /> <a href='/api/users/login/github'>Login With Github</a>")
+  })
+
+  server.get('/home', (request, reply) => {
+    reply.header('Content-Type', "text/html");
+    reply.send("<h1>You are loggedin</h1")
+  })
+
 
   return server;
 }
