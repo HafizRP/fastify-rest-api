@@ -84,9 +84,27 @@ async function main() {
     callbackUri: "http://localhost:3000/api/users/login/google/callback"
   })
 
+  server.register(foauth, {
+    name: "githubOauth2",
+    credentials: {
+      client: {
+        id: Env.GITHUB_CLIENT_ID,
+        secret: Env.GITHUB_SECRET
+      },
+      auth: foauth.GITHUB_CONFIGURATION
+    },
+    startRedirectPath: "/api/users/login/github",
+    callbackUri: "http://localhost:3000/api/users/login/github/callback"
+  })
+
+  server.get('/login', (request, reply) => {
+    reply.header('Content-Type', "text/html");
+    reply.send("<a href='/api/users/login/google'>Login With Google</a> <br /> <a href='/api/users/login/github'>Login With Github</a>")
+  })
+
   server.get('/home', (request, reply) => {
     reply.header('Content-Type', "text/html");
-    reply.send("<a href='/api/users/login/google'>Login With Google</a>")
+    reply.send("<h1>You are loggedin</h1")
   })
 
 
