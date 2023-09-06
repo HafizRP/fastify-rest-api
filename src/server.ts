@@ -1,14 +1,16 @@
-import main from "./app";
-import { Env } from "./common/schema/app.schema";
+import Fastify from "fastify";
+import FastifyAppAuth from "./application/auth";
+import FastifyAppSwagger from "./application/swagger";
+import FastifyAppRoute from "./application/route";
 
-async function buildServer() {
-  const app = await main();
-  try {
-    await app.listen({ port: Env.APP_PORT });
-  } catch (error) {
-    console.log(error)
-    process.exit(1);
-  }
+const server = Fastify();
+
+async function main() {
+  await server
+    .register(FastifyAppSwagger)
+    .register(FastifyAppAuth)
+    .register(FastifyAppRoute);
+  return server;
 }
 
-buildServer();
+export default main;
