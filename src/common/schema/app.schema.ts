@@ -7,9 +7,9 @@ const envSchema = z.object({
     APP_PORT: z.preprocess((a) => parseInt(a as string, 10), z.number()),
     AMQ_URL: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
-    GOOGLE_SECRET: z.string()
+    GOOGLE_SECRET: z.string(),
+    GITHUB_CLIENT_ID: z.string(),
+    GITHUB_SECRET: z.string(),
 })
-
-export type EnvSchema = z.infer<typeof envSchema>
 
 export const Env = envSchema.parse(process.env)

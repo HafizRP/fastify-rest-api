@@ -9,6 +9,7 @@ declare module "fastify" {
   export interface FastifyInstance {
     authenticate: any;
     googleOauth2: OAuth2Namespace
+    githubOauth2: OAuth2Namespace
   }
 }
 

@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
-    "start": "dotenv -v NODE_ENV=production -- node dist/server.js",
+    "start": "dotenv -v NODE_ENV=production -- node dist/app.js",
     "migrate:prod": "dotenv -e .env -- npx prisma migrate dev",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
-    "dev": "dotenv -e .env.local -- tsnd --respawn --transpile-only --exit-child src/server.ts",
+    "dev": "dotenv -e .env.local -- tsnd --respawn --transpile-only --exit-child src/app.ts",
     "pretest": "dotenv -e .env.test -- npx prisma migrate dev",
     "test": "dotenv -e env.test -- jest --coverage"
   },

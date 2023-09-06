@@ -95,5 +95,3 @@ async function main() {
 
   return server;
 }
-
-export default main;
