@@ -4,8 +4,7 @@ import { FastifyInstance } from 'fastify'
 import fp from 'fastify-plugin'
 import { Env } from '../common/schema/app.schema'
 import fastifyJwt from '@fastify/jwt'
-import { FastifyReply } from 'fastify/types/reply'
-import { FastifyRequest } from 'fastify/types/request'
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 export default fp(async (server: FastifyInstance) => {
     server.decorate(
