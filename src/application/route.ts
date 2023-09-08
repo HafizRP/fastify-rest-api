@@ -16,10 +16,11 @@ export default fp(async (server: FastifyInstance) => {
 
 
     server.get('/login', (request, reply) => {
+
         reply.header('Content-Type', "text/html");
         reply.send("<a href='/api/users/login/google'>Login With Google</a> <br /> <a href='/api/users/login/github'>Login With Github</a>")
     })
-
+    
     server.get('/home', (request, reply) => {
         reply.header('Content-Type', "text/html");
         reply.send("<h1>You are loggedin</h1")
