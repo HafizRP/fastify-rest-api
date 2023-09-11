@@ -4,10 +4,13 @@ import {
   loginHandler,
   registerUserHandler,
 } from "./user.controller";
-import { $ref } from "./user.schema";
+import { userRef } from "./user.schema";
+import { $ref, ApiErrorsSchema } from "../../common/schema/error.schema";
+
+
 
 async function userRoutes(server: FastifyInstance) {
-  server.get('/login/google/callback', async (request, reply) => {
+  server.get('/login/google/callback', { schema: { hide: true } }, async (request, reply) => {
     try {
       const googlaOauth2 = await server.googleOauth2.getAccessTokenFromAuthorizationCodeFlow(request)
       return { access_token: googlaOauth2.token.access_token }
@@ -16,7 +19,7 @@ async function userRoutes(server: FastifyInstance) {
     }
   })
 
-  server.get('/login/github/callback', async (request, reply) => {
+  server.get('/login/github/callback', { schema: { hide: true } }, async (request, reply) => {
     try {
       const githubAcc = await server.githubOauth2.getAccessTokenFromAuthorizationCodeFlow(request)
       return githubAcc
@@ -30,8 +33,8 @@ async function userRoutes(server: FastifyInstance) {
     {
       schema: {
         tags: ["User Routes"],
-        body: $ref("createUserSchema"),
-        response: { 201: $ref("createUserResponseSchema") },
+        body: userRef("createUserSchema"),
+        response: { 201: userRef("createUserResponseSchema"), 400: $ref('UnauthorizedErrorSchema') },
       },
     },
     registerUserHandler
@@ -42,20 +45,30 @@ async function userRoutes(server: FastifyInstance) {
     {
       schema: {
         tags: ["User Routes"],
-        body: $ref("loginSchema"),
-        response: {
-          200: $ref("loginResponseSchema"),
-        },
+        body: userRef("loginSchema"),
+        response: { 200: userRef('loginResponseSchema'), ...ApiErrorsSchema }
       },
     },
     loginHandler
   );
 
   server.delete(
-    "/:email",
+    "/:userId",
     {
       preHandler: [server.authenticate],
-      schema: { tags: ["User Routes"], params: $ref("deleteUserSchema") },
+      schema: {
+        tags: ["User Routes"],
+        security: [{ Authorization: [] }],
+        // headers: {
+        //   type: "object",
+        //   properties: {
+        //     "Authorization": {
+        //       type: "string"
+        //     }
+        //   }
+        // },
+        params: userRef('deleteUserSchema')
+      },
     },
     deleteUserHandler
   );
