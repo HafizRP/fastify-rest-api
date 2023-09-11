@@ -1,11 +1,14 @@
 import { FastifyInstance } from "fastify";
 import {
   deleteUserHandler,
+  getProductsByOwnerIdHandler,
   loginHandler,
   registerUserHandler,
 } from "./user.controller";
 import { userRef } from "./user.schema";
 import { $ref, ApiErrorsSchema } from "../../common/schema/error.schema";
+
+import { productRef } from "../product/product.schema";
 
 
 
@@ -52,6 +55,18 @@ async function userRoutes(server: FastifyInstance) {
     loginHandler
   );
 
+
+  server.get('/:userId/products',
+    {
+      schema: {
+        tags: ["User Routes"],
+        params: userRef('getProductsByOwnerId'),
+        response: { 200: userRef('getProductsByOwnerIdResponseSchema'), ...ApiErrorsSchema }
+      }
+    },
+    getProductsByOwnerIdHandler
+  )
+
   server.delete(
     "/:userId",
     {
@@ -59,14 +74,6 @@ async function userRoutes(server: FastifyInstance) {
       schema: {
         tags: ["User Routes"],
         security: [{ Authorization: [] }],
-        // headers: {
-        //   type: "object",
-        //   properties: {
-        //     "Authorization": {
-        //       type: "string"
-        //     }
-        //   }
-        // },
         params: userRef('deleteUserSchema')
       },
     },

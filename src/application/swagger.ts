@@ -36,6 +36,9 @@ export default fp(async (server) => {
     await server.register(fastifySwaggerUi, {
         routePrefix: "/docs",
         staticCSP: true,
+        uiConfig: {
+            persistAuthorization: true
+        }
     });
 })
 

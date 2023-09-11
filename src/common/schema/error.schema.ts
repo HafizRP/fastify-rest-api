@@ -1,22 +1,31 @@
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
-const UnauthorizedErrorSchema = z.object({
+const BaseErrorSchema = {
   statusCode: z.number(),
   code: z.string(),
   error: z.string(),
   message: z.string(),
-}).describe('UNAUTHORIZED_ERROR')
+}
 
+const RequestErrorSchema = z.object({ ...BaseErrorSchema }).describe('REQUEST_ERROR')
 
+const UnauthorizedErrorSchema = z.object({ ...BaseErrorSchema }).describe('UNAUTHORIZED_ERROR')
+
+const ServerErrorSchema = z.object({ ...BaseErrorSchema }).describe('SERVER_ERROR')
 
 export const { schemas: errorSchema, $ref } = buildJsonSchemas({
-  UnauthorizedErrorSchema
-}, {
-  $id: "errorSchema"
-})
+  UnauthorizedErrorSchema,
+  RequestErrorSchema,
+  ServerErrorSchema
+},
+  {
+    $id: "errorSchema"
+  }
+)
 
 export const ApiErrorsSchema = {
-  400: $ref('UnauthorizedErrorSchema'),
-  404: $ref('UnauthorizedErrorSchema')
+  400: $ref('RequestErrorSchema'),
+  401: $ref('UnauthorizedErrorSchema'),
+  500: $ref('ServerErrorSchema')
 }

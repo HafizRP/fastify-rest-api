@@ -1,5 +1,6 @@
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
+import { productsResponseSchema } from "../product/product.schema";
 
 const userSchema = {
   email: z
@@ -18,6 +19,8 @@ const createUserSchema = z.object({
     invalid_type_error: "Password must be a string",
   }),
 });
+
+const getProductsByOwnerId = z.object({ userId: z.number() })
 
 const createUserResponseSchema = z.object({ ...userSchema, id: z.number() });
 
@@ -38,11 +41,18 @@ const loginResponseSchema = z.object({ accessToken: z.string() });
 
 const deleteUserSchema = z.object({ userId: z.number() });
 
+const getProductsByOwnerIdResponseSchema = z.object({
+  ...userSchema,
+  Product: productsResponseSchema
+})
+
 export type DeleteUserDTO = z.infer<typeof deleteUserSchema>;
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export type GetProductsByOwnerId = z.infer<typeof getProductsByOwnerId>
 
 export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
   {
@@ -50,7 +60,9 @@ export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
     createUserResponseSchema,
     loginResponseSchema,
     loginSchema,
+    getProductsByOwnerIdResponseSchema,
     deleteUserSchema,
+    getProductsByOwnerId
   },
   { $id: "userSchema" }
 );
