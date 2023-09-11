@@ -3,7 +3,7 @@ import FastifyAppAuth from "./application/auth";
 import FastifyAppSwagger from "./application/swagger";
 import FastifyAppRoute from "./application/route";
 
-const server = Fastify();
+const server = Fastify()
 
 async function main() {
   await server
