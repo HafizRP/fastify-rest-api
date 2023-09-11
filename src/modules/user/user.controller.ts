@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createUser, findUserByEmail, findUsers } from "./user.service";
-import { CreateUserInput, LoginInput } from "./user.schema";
+import { createUser, findUserByEmail, findUsers, getProductsByOwnerId } from "./user.service";
+import { CreateUserInput, DeleteUserDTO, LoginInput, GetProductsByOwnerId } from "./user.schema";
 import { verifyPassword } from "../../utils/crypto";
 import prisma from "../../utils/prisma";
+import { UnauthorizedError } from "../../common/error/error.model";
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -15,7 +16,7 @@ export async function registerUserHandler(
   try {
     const users = await findUserByEmail(body.email)
 
-    if (users) throw reply.code(401).send({ message: "CREDENTIAL_USED" })
+    if (users) throw new UnauthorizedError("CREDENTIAL_USED")
 
     const user = await createUser(body);
 
@@ -33,9 +34,7 @@ export async function loginHandler(
 
   const user = await findUserByEmail(body.email);
 
-  if (!user) {
-    return reply.code(401).send({ message: "Invalid email or password" });
-  }
+  if (!user) throw new UnauthorizedError("Invalid email or password");
 
   const correctPassword = verifyPassword({
     candidatePassword: body.password,
@@ -43,9 +42,8 @@ export async function loginHandler(
     salt: user.salt,
   });
 
-  if (!correctPassword) {
-    return reply.code(401).send({ message: "Invalid email or password" });
-  }
+  if (!correctPassword) throw new UnauthorizedError("Invalid email or password")
+
 
   const { password, salt, ...rest } = user;
 
@@ -62,15 +60,15 @@ export async function getUsersHandler(
 
 
 export async function deleteUserHandler(request: FastifyRequest<{
-  Params: { email: string }
+  Params: DeleteUserDTO
 }>, reply: FastifyReply) {
   try {
-    const { email } = request.params
-    const user = await prisma.user.findUnique({ where: { email } })
+    const { userId } = request.params
+    const user = await prisma.user.findUnique({ where: { id: userId } })
 
-    if (!user) throw reply.code(401).send({ message: "INVALID_CREDENTIALS" })
+    if (!user) throw new UnauthorizedError("INVALID_CREDENTIALS")
 
-    await prisma.user.delete({ where: { email } })
+    await prisma.user.delete({ where: { id: userId } })
 
     return reply.code(200).send({ message: "USER_DELETED" })
 
@@ -78,3 +76,16 @@ export async function deleteUserHandler(request: FastifyRequest<{
     throw error
   }
 }
+
+
+export async function getProductsByOwnerIdHandler(request: FastifyRequest<{ Params: GetProductsByOwnerId }>, reply: FastifyReply) {
+  try {
+    const products = await getProductsByOwnerId(request.params.userId)
+
+    return products
+  } catch (error) {
+    throw error
+  }
+}
+
+
