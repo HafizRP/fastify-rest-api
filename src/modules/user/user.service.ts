@@ -22,3 +22,7 @@ export async function findUsers() {
     select: { email: true, name: true, id: true },
   });
 }
+
+export async function getProductsByOwnerId(userId: number) {
+  return prisma.user.findUnique({ where: { id: userId }, select: { Product: true, email: true, name: true } })
+}

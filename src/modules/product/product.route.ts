@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { createProductHandler, getProductsHandler } from "./product.controller";
-import { $ref } from "./product.schema";
+import { createProductHandler, getProductHandler, getProductsHandler } from "./product.controller";
+import { productRef } from "./product.schema";
 
 async function productRoutes(server: FastifyInstance) {
   server.post(
@@ -9,9 +9,10 @@ async function productRoutes(server: FastifyInstance) {
       preHandler: [server.authenticate],
       schema: {
         tags: ["Products Routes"],
-        body: $ref("createProductSchema"),
+        security: [{ Authorization: [] }],
+        body: productRef("createProductSchema"),
         response: {
-          201: $ref("productResponseSchema"),
+          201: productRef("productResponseSchema"),
         },
       },
     },
@@ -24,12 +25,22 @@ async function productRoutes(server: FastifyInstance) {
       schema: {
         tags: ["Products Routes"],
         response: {
-          200: $ref("productsResponseSchema"),
+          200: productRef("productsResponseSchema"),
         },
       },
     },
     getProductsHandler
   );
+
+  server.get('/:product_id',
+    {
+      schema: {
+        tags: ["Products Routes"],
+        params: productRef('getProductSchema')
+      }
+    },
+    getProductHandler
+  )
 }
 
 export default productRoutes;
