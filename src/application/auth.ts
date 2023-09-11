@@ -1,10 +1,10 @@
+import { Env } from '../common/schema/app.schema'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyInstance } from 'fastify'
 import fastifyCookie from '@fastify/cookie'
 import fastifyOauth2 from '@fastify/oauth2'
-import { FastifyInstance } from 'fastify'
 import fp from 'fastify-plugin'
-import { Env } from '../common/schema/app.schema'
 import fastifyJwt from '@fastify/jwt'
-import { FastifyReply, FastifyRequest } from 'fastify'
 
 export default fp(async (server: FastifyInstance) => {
   server.decorate(
@@ -37,6 +37,7 @@ export default fp(async (server: FastifyInstance) => {
     startRedirectPath: "/api/users/login/google",
     callbackUri: "http://localhost:3000/api/users/login/google/callback",
     tags: ["OAuth Authentication"],
+    schema: { hide: true }
   })
 
   // Github OAuth
@@ -51,6 +52,7 @@ export default fp(async (server: FastifyInstance) => {
     },
     startRedirectPath: "/api/users/login/github",
     callbackUri: "http://localhost:3000/api/users/login/github/callback",
-    tags: ["OAuth Authentication"]
+    tags: ["OAuth Authentication"],
+    schema: { hide: true }
   })
 })
