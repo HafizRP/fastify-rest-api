@@ -36,7 +36,7 @@ const loginSchema = z.object({
 
 const loginResponseSchema = z.object({ accessToken: z.string() });
 
-const deleteUserSchema = z.object({ email: z.string().email() });
+const deleteUserSchema = z.object({ userId: z.number() });
 
 export type DeleteUserDTO = z.infer<typeof deleteUserSchema>;
 
@@ -44,7 +44,7 @@ export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
-export const { schemas: userSchemas, $ref } = buildJsonSchemas(
+export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
   {
     createUserSchema,
     createUserResponseSchema,
