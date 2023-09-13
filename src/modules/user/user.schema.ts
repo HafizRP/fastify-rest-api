@@ -54,6 +54,8 @@ export type LoginInput = z.infer<typeof loginSchema>;
 
 export type GetProductsByOwnerId = z.infer<typeof getProductsByOwnerId>
 
+export type LoginResponse = z.infer<typeof loginResponseSchema>
+
 export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
   {
     createUserSchema,

@@ -9,8 +9,8 @@
     "migrate:prod": "dotenv -e .env -- npx prisma migrate dev",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
     "dev": "dotenv -e .env.local -- tsnd --respawn --transpile-only --exit-child src/app.ts",
-    "pretest": "dotenv -e .env.test -- npx prisma migrate dev",
-    "test": "dotenv -e env.test -- jest --coverage"
+    "pretest": "dotenv -e .env.test -- npx prisma migrate reset",
+    "test": "dotenv -e .env.test -- jest --coverage"
   },
   "keywords": [],
   "author": "",

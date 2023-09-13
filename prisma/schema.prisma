@@ -17,6 +17,8 @@ model User {
   password String
   salt     String
   Product  Product[]
+
+  @@map("users")
 }
 
 model Product {
@@ -26,6 +28,8 @@ model Product {
   title     String   @db.VarChar(255)
   content   String?
   price     Float
-  ownerId   Int
-  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int?
+  owner     User?     @relation(fields: [ownerId], references: [id])
+
+  @@map("products")
 }

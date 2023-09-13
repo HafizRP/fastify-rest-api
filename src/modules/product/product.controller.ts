@@ -11,7 +11,7 @@ export async function createProductHandler(
 ) {
   try {
     const product = await createProduct(request.body);
-    return product;
+    return reply.code(201).send(product)
   } catch (error) {
     throw error;
   }

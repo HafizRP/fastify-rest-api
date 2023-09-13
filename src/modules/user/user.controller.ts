@@ -4,6 +4,7 @@ import { CreateUserInput, DeleteUserDTO, LoginInput, GetProductsByOwnerId } from
 import { verifyPassword } from "../../utils/crypto";
 import prisma from "../../utils/prisma";
 import { UnauthorizedError } from "../../common/error/error.model";
+import { Env } from "../../common/schema/app.schema";
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -47,7 +48,9 @@ export async function loginHandler(
 
   const { password, salt, ...rest } = user;
 
-  return { accessToken: request.server.jwt.sign(rest) };
+  const accessToken = request.server.jwt.sign(rest)
+
+  return { accessToken };
 }
 
 export async function getUsersHandler(

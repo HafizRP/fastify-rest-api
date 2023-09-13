@@ -21,6 +21,8 @@ export default fp(async (server: FastifyInstance) => {
   server.register(fastifyJwt, {
     secret: Env.SECRET_KEY,
   });
+
+
   await server.register(fastifyCookie)
 
   // Google OAuth
