@@ -12,15 +12,9 @@ export async function createProduct(
 
 
 export async function getProduct(product_id: number) {
-
-  const sql = Prisma.sql`select title, content, price from Product WHERE id = ?`
-
-  const product = await prisma.$queryRaw<Pick<Product, 'title' | 'content' | 'price'>>(sql, [product_id]);
-
-  console.log(product)
-
-
-  return product
+  return prisma.product.findUniqueOrThrow({
+    where: { id: product_id }
+  })
 }
 
 export function getProducts() {

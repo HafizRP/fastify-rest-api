@@ -1,8 +1,5 @@
 import main from "./server";
 
-// const server = Fastify();
-
-
 async function buildServer() {
   const server = await main()
 

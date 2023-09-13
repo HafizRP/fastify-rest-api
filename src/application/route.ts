@@ -15,22 +15,21 @@ export default fp(async (server: FastifyInstance) => {
     });
 
 
-    server.get('/login', (request, reply) => {
-
+    server.get('/login', { schema: { hide: true } }, (request, reply) => {
         reply.header('Content-Type', "text/html");
         reply.send("<a href='/api/users/login/google'>Login With Google</a> <br /> <a href='/api/users/login/github'>Login With Github</a>")
     })
-    
-    server.get('/home', (request, reply) => {
+
+    server.get('/home', { schema: { hide: true } }, (request, reply) => {
         reply.header('Content-Type', "text/html");
         reply.send("<h1>You are loggedin</h1")
     })
 
-    server.get("/healthcheck", (request, reply) => {
+    server.get("/healthcheck", { schema: { tags: ["Server Endpoint"] } }, (request, reply) => {
         return { status: "OK" };
     });
 
-    server.get('/publish', async (request, reply) => {
+    server.get('/publish', { schema: { hide: true } }, async (request, reply) => {
         const connection = await AmqpConnection()
         const message = "Hello This is from fastify-rest-api"
         connection.sendToQueue("test-channel", Buffer.from(message))
