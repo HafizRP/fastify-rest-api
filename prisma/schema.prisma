@@ -13,8 +13,9 @@ datasource db {
 model User {
   id       Int       @id @default(autoincrement())
   email    String    @unique
-  name     String?
+  name     String?  
   password String
+  uuid     String    @unique @default(uuid())
   salt     String
   Product  Product[]
 
@@ -29,7 +30,7 @@ model Product {
   content   String?
   price     Float
   ownerId   Int?
-  owner     User?     @relation(fields: [ownerId], references: [id])
+  owner     User?    @relation(fields: [ownerId], references: [id])
 
   @@map("products")
 }
