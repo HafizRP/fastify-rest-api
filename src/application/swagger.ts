@@ -4,13 +4,14 @@ import fp from 'fastify-plugin'
 import { userSchemas } from '../modules/user/user.schema';
 import { productSchemas } from '../modules/product/product.schema';
 import { errorSchema } from '../common/schema/error.schema';
+import { appSchemas } from '../common/schema/app.schema';
 
 
 export default fp(async (server) => {
-    for (const schema of [...userSchemas, ...productSchemas, ...errorSchema]) {
+    for (const schema of [...userSchemas, ...productSchemas, ...errorSchema, ...appSchemas]) {
         server.addSchema(schema);
     }
-    ''
+
     await server.register(fastifySwagger, {
         openapi: {
             info: {
@@ -24,12 +25,9 @@ export default fp(async (server) => {
                         type: "http",
                         scheme: "bearer",
                         bearerFormat: "JWT"
-                        // name: "Authorization",
-                        // in: "header"
                     }
                 },
             },
-            // security: [{ AuthToken: [] }]
         }
     });
 

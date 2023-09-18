@@ -1,3 +1,4 @@
+import { buildJsonSchemas } from "fastify-zod"
 import { z } from "zod"
 
 const envSchema = z.object({
@@ -12,8 +13,15 @@ const envSchema = z.object({
     GITHUB_SECRET: z.string(),
 })
 
+const healthCheckSchema = z.object({
+    status: z.string()
+})
+
+
 const jwtSchema = z.object({ id: z.number(), name: z.string(), email: z.string(), password: z.string() })
 
 export type JwtSchema = z.infer<typeof jwtSchema>
 
 export const Env = envSchema.parse(process.env)
+
+export const { $ref: appRef, schemas: appSchemas } = buildJsonSchemas({ healthCheckSchema }, { $id: 'appSchema' })
