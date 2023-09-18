@@ -3,6 +3,7 @@ import fp from 'fastify-plugin'
 import userRoutes from '../modules/user/user.route';
 import productRoutes from '../modules/product/product.route';
 import AmqpConnection from "../utils/amqlib"
+import { appRef } from '../common/schema/app.schema';
 
 
 export default fp(async (server: FastifyInstance) => {
@@ -25,9 +26,18 @@ export default fp(async (server: FastifyInstance) => {
         reply.send("<h1>You are loggedin</h1")
     })
 
-    server.get("/healthcheck", { schema: { tags: ["Server Endpoint"] } }, (request, reply) => {
-        return { status: "OK" };
-    });
+    server.get("/healthcheck", {
+        schema:
+        {
+            tags: ["Server Endpoint"],
+            response: {
+                200: appRef('healthCheckSchema')
+            }
+        }
+    },
+        (request, reply) => {
+            return { status: "OK" };
+        });
 
     server.get('/publish', { schema: { hide: true } }, async (request, reply) => {
         const connection = await AmqpConnection()

@@ -17,7 +17,7 @@ export async function getProduct(product_id: number) {
   })
 }
 
-export function getProducts() {
+export function getProductsWithOwner() {
   return prisma.product.findMany({
     select: {
       content: true,
