@@ -4,7 +4,6 @@ import { CreateUserInput, DeleteUserDTO, LoginInput, GetProductsByOwnerId } from
 import { verifyPassword } from "../../utils/crypto";
 import prisma from "../../utils/prisma";
 import { UnauthorizedError } from "../../common/error/error.model";
-import { Env } from "../../common/schema/app.schema";
 
 export async function registerUserHandler(
   request: FastifyRequest<{
