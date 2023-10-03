@@ -1,6 +1,5 @@
 import main from "../src/server";
 import { FastifyInstance } from "fastify";
-import { CreateUserInput, LoginInput } from "../src/modules/user/user.schema";
 
 let server: FastifyInstance;
 
