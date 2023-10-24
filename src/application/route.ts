@@ -20,7 +20,7 @@ export default fp(async (server: FastifyInstance) => {
         reply.header('Content-Type', "text/html");
         reply.send("<a href='/api/users/login/google'>Login With Google</a> <br /> <a href='/api/users/login/github'>Login With Github</a>")
     })
-    
+
     server.get('/home', (request, reply) => {
         reply.header('Content-Type', "text/html");
         reply.send("<h1>You are loggedin</h1")
@@ -37,5 +37,9 @@ export default fp(async (server: FastifyInstance) => {
         connection.close()
         reply.send({ message: "Message send", data: message });
 
+    })
+
+    server.get('/', (request, reply) => {
+        reply.status(302).redirect('/docs')
     })
 })

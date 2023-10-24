@@ -10,7 +10,7 @@ export default fp(async (server) => {
     for (const schema of [...userSchemas, ...productSchemas, ...errorSchema]) {
         server.addSchema(schema);
     }
-    ''
+    
     await server.register(fastifySwagger, {
         openapi: {
             info: {
@@ -24,12 +24,9 @@ export default fp(async (server) => {
                         type: "http",
                         scheme: "bearer",
                         bearerFormat: "JWT"
-                        // name: "Authorization",
-                        // in: "header"
                     }
                 },
             },
-            // security: [{ AuthToken: [] }]
         }
     });
 
