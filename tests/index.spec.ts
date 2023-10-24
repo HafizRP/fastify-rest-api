@@ -1,4 +1,5 @@
-import main from "../src/app";
+
+import main from "../src/server";
 import { FastifyInstance } from "fastify";
 import { CreateUserInput, LoginInput } from "../src/modules/user/user.schema";
 
