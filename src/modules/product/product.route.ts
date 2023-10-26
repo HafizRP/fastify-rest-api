@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { createProductHandler, getProductHandler, getProductsHandler } from "./product.controller";
+import { chatProductOwner, createProductHandler, getProductHandler, getProductsHandler, getProductsLive } from "./product.controller";
 import { productRef } from "./product.schema";
 import { ApiErrorsSchema } from "../../common/schema/error.schema";
 
 
 async function productRoutes(server: FastifyInstance) {
+
   server.post(
     "",
     {
@@ -22,8 +23,7 @@ async function productRoutes(server: FastifyInstance) {
     createProductHandler
   );
 
-  server.get(
-    "",
+  server.get("",
     {
       schema: {
         tags: ["Products Routes"],
@@ -49,6 +49,11 @@ async function productRoutes(server: FastifyInstance) {
     },
     getProductHandler
   )
+
+
+  server.get('/live', { websocket: true }, getProductsLive)
+
+  server.get('/chat/:chat_id', { websocket: true, preHandler: [server.authenticate] }, chatProductOwner)
 }
 
 export default productRoutes;

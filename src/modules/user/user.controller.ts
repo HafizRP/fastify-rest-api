@@ -68,7 +68,7 @@ export async function deleteUserHandler(request: FastifyRequest<{
     const { userId } = request.params
     const user = await prisma.user.findUnique({ where: { id: userId } })
 
-    if (!user) throw new UnauthorizedError("INVALID_CREDENTIALS")
+    if (!user) throw new UnauthorizedError("USER_NOT_EXIST")
 
     await prisma.user.delete({ where: { id: userId } })
 
