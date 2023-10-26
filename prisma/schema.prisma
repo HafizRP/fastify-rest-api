@@ -13,11 +13,14 @@ datasource db {
 model User {
   id       Int       @id @default(autoincrement())
   email    String    @unique
-  name     String?  
+  name     String?
   password String
   uuid     String    @unique @default(uuid())
   salt     String
   Product  Product[]
+  
+  Role     Roles     @relation(fields: [roleId], references: [id])
+  roleId   Int
 
   @@map("users")
 }
@@ -33,4 +36,12 @@ model Product {
   owner     User?    @relation(fields: [ownerId], references: [id])
 
   @@map("products")
+}
+
+model Roles {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  User User[]
+
+  @@map("users_roles")
 }

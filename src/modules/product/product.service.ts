@@ -1,4 +1,3 @@
-import { Prisma, Product } from "@prisma/client";
 import prisma from "../../utils/prisma";
 import { CreateProductInput } from "./product.schema";
 
