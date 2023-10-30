@@ -24,5 +24,5 @@ export async function findUsers() {
 }
 
 export async function getProductsByOwnerId(userId: number) {
-  return prisma.user.findUnique({ where: { id: userId }, select: { Product: true, email: true, name: true } })
+  return prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { Product: true, email: true, name: true } })
 }

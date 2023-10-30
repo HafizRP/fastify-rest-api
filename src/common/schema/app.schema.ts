@@ -18,9 +18,11 @@ const healthCheckSchema = z.object({
 })
 
 
-const jwtSchema = z.object({ id: z.number(), name: z.string(), email: z.string(), password: z.string() })
+const jwtSchema = z.object({ id: z.number(), name: z.string(), email: z.string() })
 
-export type JwtSchema = z.infer<typeof jwtSchema>
+type JwtPayload = { iat: number, exp: number }
+
+export type JwtSchema = z.infer<typeof jwtSchema> & JwtPayload
 
 export const Env = envSchema.parse(process.env)
 
