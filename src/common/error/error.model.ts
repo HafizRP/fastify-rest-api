@@ -17,6 +17,13 @@ export class RequestError extends BaseError {
     }
 }
 
+export class NotFoundError extends BaseError {
+    constructor(message: string) {
+        super(message)
+        this.statusCode = 404
+    }
+}
+
 export class UnauthorizedError extends BaseError {
     constructor(message: string) {
         super(message)

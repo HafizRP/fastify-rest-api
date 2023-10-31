@@ -1,5 +1,6 @@
 import { JWT } from "@fastify/jwt";
 import { OAuth2Namespace } from '@fastify/oauth2'
+import { JwtSchema } from "./common/schema/app.schema";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -15,10 +16,6 @@ declare module "fastify" {
 
 declare module "@fastify/jwt" {
   interface FastifyJWT {
-    user: {
-      id: number;
-      name: string;
-      email: string;
-    };
+    user: JwtSchema
   }
 }

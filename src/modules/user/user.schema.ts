@@ -30,7 +30,7 @@ const loginSchema = z.object({
       required_error: "Email is required",
       invalid_type_error: "Email must be a string",
     })
-    .email(),
+    .email({ message: "Email must be a valid email" }),
   password: z.string({
     required_error: "Password is required",
     invalid_type_error: "Password must be a string",
@@ -53,6 +53,8 @@ export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export type GetProductsByOwnerId = z.infer<typeof getProductsByOwnerId>
+
+export type LoginResponse = z.infer<typeof loginResponseSchema>
 
 export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
   {

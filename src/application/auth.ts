@@ -1,4 +1,4 @@
-import { Env } from '../common/schema/app.schema'
+import { Env, JwtSchema } from '../common/schema/app.schema'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { FastifyInstance } from 'fastify'
 import fastifyCookie from '@fastify/cookie'
@@ -20,7 +20,12 @@ export default fp(async (server: FastifyInstance) => {
 
   server.register(fastifyJwt, {
     secret: Env.SECRET_KEY,
+    sign: {
+      expiresIn: "10s"
+    }
   });
+
+
   await server.register(fastifyCookie)
 
   // Google OAuths
