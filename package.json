@@ -7,10 +7,15 @@
     "build": "tsc --build",
     "start": "dotenv -v NODE_ENV=production -- node dist/app.js",
     "migrate:prod": "dotenv -e .env -- npx prisma migrate dev",
+    "migrate:reset": "dotenv -e .env.local -- npx prisma migrate reset --force",
+    "studio:dev": "dotenv -e .env.local -- npx prisma studio",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
     "dev": "dotenv -e .env.local -- tsnd --respawn --transpile-only --exit-child src/app.ts",
-    "pretest": "dotenv -e .env.test -- npx prisma migrate dev",
-    "test": "dotenv -e env.test -- jest --coverage"
+    "pretest": "dotenv -e .env.test -- npx prisma migrate reset --force",
+    "test": "dotenv -e .env.test -- jest --coverage"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed"
   },
   "keywords": [],
   "author": "",
@@ -20,8 +25,10 @@
     "@fastify/env": "^4.2.0",
     "@fastify/jwt": "^7.2.0",
     "@fastify/oauth2": "^7.3.0",
+    "@fastify/static": "^6.11.2",
     "@fastify/swagger": "^8.8.0",
     "@fastify/swagger-ui": "^1.9.3",
+    "@fastify/websocket": "^8.2.0",
     "@prisma/client": "^5.0.0",
     "@types/jest": "^29.5.3",
     "amqplib": "^0.10.3",
@@ -39,6 +46,7 @@
     "@types/amqplib": "^0.10.1",
     "@types/fastify-jwt": "^0.8.1",
     "@types/node": "^20.4.5",
+    "@types/ws": "^8.5.8",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.2.1",
     "typescript": "^5.1.6"

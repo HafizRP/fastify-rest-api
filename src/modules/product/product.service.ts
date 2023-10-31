@@ -1,4 +1,3 @@
-import { Prisma, Product } from "@prisma/client";
 import prisma from "../../utils/prisma";
 import { CreateProductInput } from "./product.schema";
 
@@ -12,18 +11,12 @@ export async function createProduct(
 
 
 export async function getProduct(product_id: number) {
-
-  const sql = Prisma.sql`select title, content, price from Product WHERE id = ?`
-
-  const product = await prisma.$queryRaw<Pick<Product, 'title' | 'content' | 'price'>>(sql, [product_id]);
-
-  console.log(product)
-
-
-  return product
+  return prisma.product.findUniqueOrThrow({
+    where: { id: product_id }
+  })
 }
 
-export function getProducts() {
+export function getProductsWithOwner() {
   return prisma.product.findMany({
     select: {
       content: true,

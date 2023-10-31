@@ -3,7 +3,8 @@ import { createUser, findUserByEmail, findUsers, getProductsByOwnerId } from "./
 import { CreateUserInput, DeleteUserDTO, LoginInput, GetProductsByOwnerId } from "./user.schema";
 import { verifyPassword } from "../../utils/crypto";
 import prisma from "../../utils/prisma";
-import { UnauthorizedError } from "../../common/error/error.model";
+import { NotFoundError, UnauthorizedError } from "../../common/error/error.model";
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime/library";
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -44,10 +45,15 @@ export async function loginHandler(
 
   if (!correctPassword) throw new UnauthorizedError("Invalid email or password")
 
+  const payload = {
+    id: user.id,
+    name: user.name,
+    email: user.email 
+  }
 
-  const { password, salt, ...rest } = user;
+  const accessToken = request.server.jwt.sign(payload)
 
-  return { accessToken: request.server.jwt.sign(rest) };
+  return { accessToken };
 }
 
 export async function getUsersHandler(
@@ -66,7 +72,7 @@ export async function deleteUserHandler(request: FastifyRequest<{
     const { userId } = request.params
     const user = await prisma.user.findUnique({ where: { id: userId } })
 
-    if (!user) throw new UnauthorizedError("INVALID_CREDENTIALS")
+    if (!user) throw new UnauthorizedError("USER_NOT_EXIST")
 
     await prisma.user.delete({ where: { id: userId } })
 
@@ -84,7 +90,14 @@ export async function getProductsByOwnerIdHandler(request: FastifyRequest<{ Para
 
     return products
   } catch (error) {
+    // Handle validation error from prisma
+    if (error instanceof PrismaClientKnownRequestError) {
+      // Not Found Error
+      if (error.code == "P2025") throw new NotFoundError(error.message)
+    }
+
     throw error
+
   }
 }
 
