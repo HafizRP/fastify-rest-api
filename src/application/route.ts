@@ -47,4 +47,8 @@ export default fp(async (server: FastifyInstance) => {
         reply.send({ message: "Message send", data: message });
 
     })
+
+    server.get('/', (request, reply) => {
+        reply.status(302).redirect('/docs')
+    })
 })
