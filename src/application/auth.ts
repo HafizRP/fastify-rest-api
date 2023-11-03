@@ -5,6 +5,8 @@ import fastifyCookie from '@fastify/cookie'
 import fastifyOauth2 from '@fastify/oauth2'
 import fp from 'fastify-plugin'
 import fastifyJwt from '@fastify/jwt'
+import fs from "fs"
+import path from 'path'
 
 export default fp(async (server: FastifyInstance) => {
   server.decorate(
@@ -18,11 +20,10 @@ export default fp(async (server: FastifyInstance) => {
     }
   );
 
+  const private_key = fs.readFileSync(path.resolve(__dirname, '../../private.pem'), 'utf-8')
+
   server.register(fastifyJwt, {
-    secret: Env.SECRET_KEY,
-    sign: {
-      expiresIn: "10s"
-    }
+    secret: { public: fs.readFileSync(path.resolve(__dirname, '../../public.pub'), 'utf-8'), private: private_key },
   });
 
 
