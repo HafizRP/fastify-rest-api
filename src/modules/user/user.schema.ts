@@ -46,6 +46,8 @@ const getProductsByOwnerIdResponseSchema = z.object({
   Product: productsResponseSchema
 })
 
+const verifyAccountRequest = z.object({token: z.string()})
+
 export type DeleteUserDTO = z.infer<typeof deleteUserSchema>;
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
@@ -56,6 +58,12 @@ export type GetProductsByOwnerId = z.infer<typeof getProductsByOwnerId>
 
 export type LoginResponse = z.infer<typeof loginResponseSchema>
 
+export type VerifyAccountRequest = z.infer<typeof verifyAccountRequest>
+
+export type VerifyAccountToken = {
+  user_id: number
+}
+
 export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
   {
     createUserSchema,
@@ -64,7 +72,8 @@ export const { schemas: userSchemas, $ref: userRef } = buildJsonSchemas(
     loginSchema,
     getProductsByOwnerIdResponseSchema,
     deleteUserSchema,
-    getProductsByOwnerId
+    getProductsByOwnerId,
+    verifyAccountRequest
   },
   { $id: "userSchema" }
 );
