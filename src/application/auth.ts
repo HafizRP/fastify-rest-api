@@ -29,7 +29,7 @@ export default fp(async (server: FastifyInstance) => {
 
   await server.register(fastifyCookie)
 
-  // Google OAuth
+  // Google OAuths
   await server.register(fastifyOauth2, {
     name: "googleOauth2",
     credentials: {

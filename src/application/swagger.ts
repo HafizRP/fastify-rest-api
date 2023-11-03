@@ -11,7 +11,7 @@ export default fp(async (server) => {
     for (const schema of [...userSchemas, ...productSchemas, ...errorSchema, ...appSchemas]) {
         server.addSchema(schema);
     }
-
+  
     await server.register(fastifySwagger, {
         openapi: {
             info: {
