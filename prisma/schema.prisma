@@ -10,10 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  PENDING
+  VERIFIED
+}
+
 model User {
   id       Int       @id @default(autoincrement())
   email    String    @unique
   name     String?
+  status   UserStatus @default(PENDING)
   password String
   uuid     String    @unique @default(uuid())
   salt     String
