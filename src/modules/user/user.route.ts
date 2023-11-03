@@ -4,12 +4,10 @@ import {
   getProductsByOwnerIdHandler,
   loginHandler,
   registerUserHandler,
+  verifyAccount,
 } from "./user.controller";
 import { userRef } from "./user.schema";
 import { $ref, ApiErrorsSchema } from "../../common/schema/error.schema";
-
-import { productRef } from "../product/product.schema";
-
 
 
 async function userRoutes(server: FastifyInstance) {
@@ -54,6 +52,17 @@ async function userRoutes(server: FastifyInstance) {
     },
     loginHandler
   );
+
+
+  server.get('/verify', {
+    schema: {
+      tags: ["User Routes"],
+      // params: userRef("verifyAccountRequest"),
+      querystring: userRef("verifyAccountRequest"),
+
+    }
+  }, verifyAccount
+  )
 
 
   server.get('/:userId/products',
