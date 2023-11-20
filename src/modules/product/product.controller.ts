@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../../utils/prisma";
-import { CreateProductInput, FilterProductInput, GetProductInput, filterProductRequestSchema } from "./product.schema";
+import { CreateProductInput, FilterProductInput, GetProductInput } from "./product.schema";
 import { createProduct, getProduct } from "./product.service";
 import { SocketStream } from "@fastify/websocket";
 
@@ -47,8 +47,6 @@ export async function getProductsLive(connection: SocketStream, request: Fastify
     getProducts = setInterval(async () => {
       const products = await prisma.product.findMany({ where: { title: { contains: message.title } } })
       connection.socket.send(JSON.stringify(products))
-
-      console.log('GET 2')
     }, 1000)
   })
 
