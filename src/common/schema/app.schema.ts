@@ -11,6 +11,9 @@ const envSchema = z.object({
     GOOGLE_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_SECRET: z.string(),
+    MAIL_USER: z.string(),
+    MAIL_PASSWORD: z.string(),
+    CLIENT_SECRET_KEY: z.string()
 })
 
 const healthCheckSchema = z.object({
