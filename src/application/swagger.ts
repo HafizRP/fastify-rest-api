@@ -11,7 +11,7 @@ export default fp(async (server) => {
     for (const schema of [...userSchemas, ...productSchemas, ...errorSchema, ...appSchemas]) {
         server.addSchema(schema);
     }
-  
+
     await server.register(fastifySwagger, {
         openapi: {
             info: {
@@ -34,8 +34,23 @@ export default fp(async (server) => {
     await server.register(fastifySwaggerUi, {
         routePrefix: "/docs",
         staticCSP: true,
-        uiConfig: {
+        uiConfig: { 
             persistAuthorization: true
+        },
+        uiHooks: {
+            preHandler: async (request, reply) => {
+                const token = request.headers['authorization']
+                if (token != undefined) {
+                    const [username, password] = Buffer.from(token.split(' ')[1], 'base64').toString().split(':');
+                    if (username != 'admin' && password == 'admin') {
+                        reply.header("WWW-Authenticate", "Basic realm='swagger-ui'")
+                        reply.code(401).send("INVALID_CREDENTIALS")
+                    }
+                } else {
+                    reply.header("WWW-Authenticate", "Basic realm='swagger-ui'")
+                    reply.code(401).send("UNATHROIZED")
+                }
+            }
         }
     });
 })
