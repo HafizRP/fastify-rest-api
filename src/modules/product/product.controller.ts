@@ -3,10 +3,17 @@ import prisma from "../../utils/prisma";
 import { CreateProductInput, FilterProductInput, GetProductInput } from "./product.schema";
 import { createProduct, getProduct } from "./product.service";
 import { SocketStream } from "@fastify/websocket";
+import { RedisServer } from "../../utils/redis";
 
 export async function createProductHandler(request: FastifyRequest<{ Body: CreateProductInput }>, reply: FastifyReply) {
   try {
     const product = await createProduct(request.body);
+    const redis = await RedisServer()
+
+    console.log(product.id)
+    
+    await redis.publish(`products/${product.id}`, `New Product ID:${product.id}`)
+
     return reply.code(201).send(product)
   } catch (error) {
     throw error;
