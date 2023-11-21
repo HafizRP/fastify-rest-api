@@ -6,3 +6,6 @@ node_modules
 coverage
 dist
 public
+private.pem
+public.pub
+users.json
