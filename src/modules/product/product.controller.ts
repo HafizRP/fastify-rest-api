@@ -12,7 +12,7 @@ export async function createProductHandler(request: FastifyRequest<{ Body: Creat
 
     console.log(product.id)
     
-    await redis.publish(`products/${product.id}`, `New Product ID:${product.id}`)
+    await redis.publish(`new-products`, `New Product ID:${product.id}`)
 
     return reply.code(201).send(product)
   } catch (error) {
