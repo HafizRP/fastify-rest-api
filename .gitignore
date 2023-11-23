@@ -8,5 +8,6 @@ dist
 public
 private.pem
 public.pub
-users.json
 testing
+products.json
+users.json
