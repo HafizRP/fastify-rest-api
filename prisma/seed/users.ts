@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../../src/utils/crypto";
+import seedUsers from "./data/users.json"
 
 export async function userSeeder(prisma: PrismaClient) {
     const users = [
@@ -20,7 +21,8 @@ export async function userSeeder(prisma: PrismaClient) {
             name: "superadmin",
             password: "superadmin12345",
             roleId: 3
-        }
+        },
+        ...seedUsers
     ]
 
 
@@ -31,6 +33,7 @@ export async function userSeeder(prisma: PrismaClient) {
                 name,
                 email,
                 password: hash,
+                status: "VERIFIED",
                 salt,
                 roleId
             }
