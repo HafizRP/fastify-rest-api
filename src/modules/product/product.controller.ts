@@ -10,8 +10,6 @@ export async function createProductHandler(request: FastifyRequest<{ Body: Creat
     const product = await createProduct(request.body);
     const redis = await RedisServer()
 
-    console.log(product.id)
-    
     await redis.publish(`new-products`, `New Product ID:${product.id}`)
 
     return reply.code(201).send(product)
@@ -24,7 +22,19 @@ export async function createProductHandler(request: FastifyRequest<{ Body: Creat
 export async function getProductHandler(request: FastifyRequest<{ Params: GetProductInput }>, reply: FastifyReply) {
   try {
     const { product_id } = request.params
+    const redis = await RedisServer()
+
+    const key = `product:${product_id}`
+
+    const cache = await redis.get(key)
+
+    if (cache) {
+      return JSON.parse(cache)
+    }
+
     const product = await getProduct(product_id)
+    await redis.setex(key, 60 * 2, JSON.stringify(product))
+
     return product
   } catch (error) {
     throw error
@@ -32,6 +42,7 @@ export async function getProductHandler(request: FastifyRequest<{ Params: GetPro
 }
 
 export async function getProductsHandler() {
+  return prisma.product.findMany()
 }
 
 export async function getProductsLive(connection: SocketStream, request: FastifyRequest) {

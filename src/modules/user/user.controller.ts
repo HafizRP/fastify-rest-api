@@ -76,6 +76,8 @@ export async function loginHandler(
 
   if (!correctPassword) throw new UnauthorizedError("Invalid email or password")
 
+  if (user.status == "PENDING") throw new UnauthorizedError("Please wait account to be verified!")
+
   const payload = {
     id: user.id,
     name: user.name,
@@ -132,16 +134,51 @@ export async function getProductsByOwnerIdHandler(request: FastifyRequest<{ Para
   }
 }
 
+export async function getProfileAccount(request: FastifyRequest<{ Params: { username: string } }>, reply: FastifyReply) {
+  try {
+    const { username } = request.params
+    const user = await prisma.user.findFirst({
+      where: {
+        name: username
+      },
+      select: {
+        email: true,
+        name: true,
+        id: true,
+        status: true,
+        Role: true,
+      }
+    })
+
+    if (user == null) throw new NotFoundError("USER_PROFILE_NOT_FOUND")
+
+    return user
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function verifyAccount(request: FastifyRequest<{ Querystring: VerifyAccountRequest }>) {
   const { token } = request.query
 
   try {
     const Itoken = request.server.jwt.verify<VerifyAccountToken>(token, { algorithms: ["RS256"] })
 
-    const user = await prisma.user.findUnique({ where: { id: Itoken.user_id } })
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Itoken.user_id
+      }
+    })
+
+    if (user?.status == "VERIFIED") {
+      return {
+        message: "ACCOUNT_HAS_BEEN_VERIFIED",
+      }
+    }
+
+    await prisma.user.update({ data: { status: "VERIFIED" }, where: { id: Itoken.user_id } })
 
     return true
-
   } catch (error) {
     throw error
   }

@@ -5,6 +5,7 @@ const productInput = {
   title: z.string(),
   price: z.number(),
   content: z.string().optional(),
+  ownerId: z.number()
 };
 
 const getProductSchema = z.object({ product_id: z.number() })
@@ -12,7 +13,7 @@ const getProductSchema = z.object({ product_id: z.number() })
 const productGenerated = {
   id: z.number(),
   createdAt: z.string(),
-  updatedAt: z.string(),
+  updatedAt: z.string()
 };
 
 
